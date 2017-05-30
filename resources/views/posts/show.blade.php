@@ -13,21 +13,40 @@
                     {!! nl2br($post->body) !!}
                 </div>
             </div>
+
+            @if($post->comments()->count())
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h4>Comments</h4>
+                    </div>
+                </div>
+                @foreach($post->comments()->latest()->get() as $comment)
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            {{ $comment->user->name }} said on {{ $comment->created_at->toFormattedDateString() }}
+                        </div>
+                        <div class="panel-body">
+                            {!! nl2br($comment->body) !!}
+                        </div>
+                    </div>
+                @endforeach
+            @endif
+
             <div class="panel panel-info">
                 <div class="panel-heading">
-                    <h4>Comments</h4>
+                    <h4>Submit a Comment</h4>
+                </div>
+                <div class="panel-body">
+                    <form action="{{ route('comments.store', $post) }}" method="post">
+                        <div class="form-group">
+                            <label for="postBody">Your Comment</label>
+                            <textarea name="body" class="form-control" id="postBody" placeholder="Comment" rows="4"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-default">Submit Comment</button>
+                        {!! csrf_field() !!}
+                    </form>
                 </div>
             </div>
-            @foreach($post->comments as $comment)
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        {{ $comment->user->name }} said on {{ $comment->created_at->toFormattedDateString() }}
-                    </div>
-                    <div class="panel-body">
-                        {!! nl2br($comment->body) !!}
-                    </div>
-                </div>
-            @endforeach
         </div>
     </div>
 </div>

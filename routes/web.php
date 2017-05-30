@@ -19,4 +19,8 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/posts/new', 'PostsController@create')->name('posts.create');
+Route::post('/posts/new', 'PostsController@store')->name('posts.store');
 Route::get('/posts/{post}', 'PostsController@show')->name('posts.view');
+
+Route::post('/comments/{post}/new', 'CommentsController@store')->name('comments.store');
