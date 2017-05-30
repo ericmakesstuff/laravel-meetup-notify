@@ -28,7 +28,7 @@
                     </button>
 
                     <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}">
+                    <a class="navbar-brand" href="{{ route('home') }}">
                         {{ config('app.name', 'Laravel') }}
                     </a>
                 </div>
@@ -48,31 +48,20 @@
                         @else
                             <li><a href="{{ route('posts.create') }}">New Post</a></li>
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Messages <span class="badge">3</span> <span class="caret"></span></a>
+                                <a href="#" class="dropdown-toggle bg-danger" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Messages <span class="badge">{{ auth()->user()->unreadNotifications->count() }}</span> <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="#">
-                                            New comment by Kevin on your blog post:<br />
-                                            My First Post<br />
-                                            <em>I just wanted to say that I enjoyed...</em>
-                                        </a>
-                                    </li>
-                                    <li role="separator" class="divider"></li>
-                                    <li>
-                                        <a href="#">
-                                            New comment by John on your blog post:<br />
-                                            A Quick Follow-up<br />
-                                            <em>This is good information that is go...</em>
-                                        </a>
-                                    </li>
-                                    <li role="separator" class="divider"></li>
-                                    <li>
-                                        <a href="#">
-                                            New comment by John on your blog post:<br />
-                                            My First Post<br />
-                                            <em>I really liked the way you presente...</em>
-                                        </a>
-                                    </li>
+                                    @foreach(auth()->user()->notifications as $i => $notification)
+                                        @if($i > 0)
+                                            <li role="separator" class="divider"></li>
+                                        @endif
+                                        <li>
+                                            <a href="{{ route('posts.view', $notification->data['post_id']) }}">
+                                                New comment by {{ $notification->data['user'] }} on your blog post:<br />
+                                                {{ $notification->data['post_title'] }}<br />
+                                                <em>{{ $notification->data['comment'] }}</em>
+                                            </a>
+                                        </li>
+                                    @endforeach
                                 </ul>
                             </li>
                             <li class="dropdown">
