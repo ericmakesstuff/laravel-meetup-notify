@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Austin Laravel Blog') }}</title>
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -29,7 +29,7 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ route('home') }}">
-                        {{ config('app.name', 'Laravel') }}
+                        {{ config('app.name', 'Austin Laravel Blog') }}
                     </a>
                 </div>
 
@@ -47,23 +47,7 @@
                             <li><a href="{{ route('register') }}">Register</a></li>
                         @else
                             <li><a href="{{ route('posts.create') }}">New Post</a></li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle bg-danger" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Messages <span class="badge">{{ auth()->user()->unreadNotifications->count() }}</span> <span class="caret"></span></a>
-                                <ul class="dropdown-menu">
-                                    @foreach(auth()->user()->notifications as $i => $notification)
-                                        @if($i > 0)
-                                            <li role="separator" class="divider"></li>
-                                        @endif
-                                        <li>
-                                            <a href="{{ route('posts.view', $notification->data['post_id']) }}">
-                                                New comment by {{ $notification->data['user'] }} on your blog post:<br />
-                                                {{ $notification->data['post_title'] }}<br />
-                                                <em>{{ $notification->data['comment'] }}</em>
-                                            </a>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </li>
+                            <user-alerts></user-alerts>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     {{ Auth::user()->name }} <span class="caret"></span>
