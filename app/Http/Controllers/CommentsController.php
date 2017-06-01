@@ -26,7 +26,9 @@ class CommentsController extends Controller
             'body' => $request->get('body')
         ]));
 
-        $post->author->notify(new CommentAddedToPost($comment));
+        if ($post->author->id != auth()->user()->id) {
+            $post->author->notify(new CommentAddedToPost($comment));
+        }
 
         return redirect()->back();
     }
