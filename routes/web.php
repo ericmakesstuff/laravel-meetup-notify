@@ -47,3 +47,9 @@ Route::get('/api/user/notifications', function() {
         })->take(5),
     ];
 });
+
+Route::get('/api/user/markNotificationsRead', function() {
+    if (auth()->user()) {
+        auth()->user()->unreadNotifications->markAsRead();
+    }
+});

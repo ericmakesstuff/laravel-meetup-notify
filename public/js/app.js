@@ -41449,6 +41449,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -41459,13 +41460,39 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         };
     },
     mounted: function mounted() {
-        var _this = this;
+        this.loadNotifications();
+    },
 
-        axios.get('/api/user/notifications').then(function (data) {
-            _this.userNotificationCount = data.data.notification_count;
-            _this.userUnreadNotifications = data.data.unread_notification_count;
-            _this.userNotifications = data.data.notifications;
-        });
+    methods: {
+        loadNotifications: function loadNotifications() {
+            var _this = this;
+
+            axios.get('/api/user/notifications').then(function (data) {
+                _this.userNotificationCount = data.data.notification_count;
+                _this.userUnreadNotifications = data.data.unread_notification_count;
+                _this.userNotifications = data.data.notifications;
+                _this.$nextTick(function () {
+                    _this.registerNotificationDropdownListener();
+                });
+            });
+        },
+        registerNotificationDropdownListener: function registerNotificationDropdownListener() {
+            var component = this;
+            $('#notification-dropdown').on('shown.bs.dropdown', function () {
+                component.markNotificationsRead();
+            });
+        },
+        markNotificationsRead: function markNotificationsRead() {
+            var _this2 = this;
+
+            if (!this.userUnreadNotifications) {
+                return;
+            }
+
+            axios.get('/api/user/markNotificationsRead').then(function (data) {
+                _this2.userUnreadNotifications = 0;
+            });
+        }
     }
 });
 
@@ -41509,7 +41536,10 @@ module.exports = Component.exports
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return (_vm.userNotificationCount) ? _c('li', {
-    staticClass: "dropdown"
+    staticClass: "dropdown",
+    attrs: {
+      "id": "notification-dropdown"
+    }
   }, [_c('a', {
     staticClass: "dropdown-toggle",
     class: {
@@ -41535,6 +41565,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "role": "separator"
       }
     }, [_vm._v(_vm._s(_vm.index))]) : _vm._e(), _vm._v(" "), _c('li', [_c('a', {
+      staticClass: "dropdown-link",
       attrs: {
         "href": '/posts/' + notification.post_id
       }
